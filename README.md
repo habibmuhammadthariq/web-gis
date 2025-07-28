@@ -7,7 +7,7 @@ Pastikan device-mu sudah terinstall Node.js
     npm install atau npm i
   ```
 
-2. copas file .env.example dan kemudian ubah menjadi .env.local
+2. copas file env.example dan kemudian ubah menjadi .env.local
 
 3. jalankan kode dengan perintah 
   ```bash
