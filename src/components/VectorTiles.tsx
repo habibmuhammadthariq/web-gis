@@ -43,10 +43,12 @@ export default function VectorTileMap() {
     );
     vectorTileLayer.addTo(map);
     */
-
-        /* Map Libre GL JS */
-    /* */
+   /* Map Libre GL JS */
+   /* */
+    map.createPane('vectorTilePane');
+    map.getPane('vectorTilePane')!.style.zIndex = '650'; // higher than tile layer
     const vectorLayer = L.maplibreGL({
+      pane: 'vectorTilePane' as unknown as undefined,
       transformRequest: (url)=> {
         return {
           url: url,
@@ -81,7 +83,6 @@ export default function VectorTileMap() {
       }
     })
     vectorLayer.addTo(map);
-    vectorLayer.getContainer().style.zIndex = '1000';
     /* */
 
     return () => {
