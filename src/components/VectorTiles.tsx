@@ -52,7 +52,7 @@ export default function VectorTileMap() {
       transformRequest: (url)=> {
         return {
           url: url,
-          headers: { 'Authorization': 'Basic ' + btoa('digitaltwinugm:16Algnk8OIeY5m') }
+          headers: { 'Authorization': 'Bearer ' + process.env.NEXT_PUBLIC_TOKEN }
         };
       },
       style: {
@@ -62,7 +62,6 @@ export default function VectorTileMap() {
             type: 'vector',
             tiles: [
               "https://nginx-production-d7b5.up.railway.app/tiles/public.vector_tiles/{z}/{x}/{y}.pbf"
-              // "http://localhost/tiles/{z}/{x}/{y}.pbf",
             ],
             minzoom: 0,
             maxzoom: 20
