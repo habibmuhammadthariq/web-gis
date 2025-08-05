@@ -4,6 +4,7 @@
 //   ssr: false
 // });
 
-// export default function VectorTilePage() {
+export default function VectorTilePage() {
   // return <VectorTileMap />;
-// } 
+  return <> <div>hello world</div> </>
+} 
