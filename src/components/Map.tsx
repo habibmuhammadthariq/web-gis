@@ -45,12 +45,13 @@ const Map = () => {
             type: 'raster',
             source: 'openstreetmap',
             minzoom: 0,
-            maxzoom: 19
+            maxzoom: 18
           }
         ]
       },
       center: [106.816666, -6.2], // Jakarta coordinates
-      zoom: 10
+      zoom: 10,
+      maxZoom: 18
     });
 
     mapRef.current.on('load', () => {
@@ -96,7 +97,44 @@ const Map = () => {
       });
 
       mapRef.current?.setLayoutProperty('buildings-3d', 'visibility', 'none');
+    });
 
+    mapRef.current.on('click', (e) => {
+      const features = mapRef.current?.queryRenderedFeatures(e.point, {
+        layers: ['buildings-2d', 'buildings-3d']
+      });
+      if (!features?.length) return;
+
+      const feature = features[0];
+      const props = feature.properties;
+      const { lng, lat } = e.lngLat;
+
+      let html = "<strong>Building feature properties:</strong><br/><ul>";
+      for (const k in props) {
+        html += `<li><code>${k}</code>: ${props[k]}</li>`;
+      }
+      html += "</ul>";
+
+      new maplibregl.Popup()
+      .setLngLat(e.lngLat)
+      .setHTML(html)
+      .addTo(mapRef.current!);
+    });
+
+    ['buildings-2d', 'buildings-3d'].forEach(layerId => {
+      mapRef.current?.on('mouseenter', layerId, () => {
+        const canvas = mapRef.current?.getCanvas();
+        if (canvas) {
+          canvas.style.cursor = 'pointer';
+        }
+      });
+  
+      mapRef.current?.on('mouseleave', layerId, () => {
+        const canvas = mapRef.current?.getCanvas();
+        if (canvas) {
+          canvas.style.cursor = '';
+        }
+      });
     });
 
     return () => {
