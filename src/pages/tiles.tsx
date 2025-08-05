@@ -1,9 +1,9 @@
-import dynamic from "next/dynamic";
+// import dynamic from "next/dynamic";
 
-const VectorTileMap = dynamic(() => import("@/components/VectorTiles"), {
-  ssr: false
-});
+// const VectorTileMap = dynamic(() => import("@/components/VectorTiles"), {
+//   ssr: false
+// });
 
-export default function VectorTilePage() {
-  return <VectorTileMap />;
-} 
+// export default function VectorTilePage() {
+  // return <VectorTileMap />;
+// } 
