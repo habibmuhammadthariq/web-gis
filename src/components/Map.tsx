@@ -114,6 +114,29 @@ const Map = () => {
         html += `<li><code>${k}</code>: ${props[k]}</li>`;
       }
       html += "</ul>";
+      
+      // Street View deep link (Google Maps)
+      const streetViewUrl = `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lng}&heading=0&pitch=0&fov=90`;
+      // Append button row
+      html += `
+        <div style="margin-top:8px;">
+          <a 
+            href="${streetViewUrl}" 
+            target="_blank" 
+            style="
+              display:inline-block;
+              padding:6px 12px;
+              background:#1a73e8;
+              color:white;
+              text-decoration:none;
+              border-radius:4px;
+              font-size:13px;
+            "
+          >
+            Open Street View
+          </a>
+        </div>
+      `;
 
       new maplibregl.Popup()
       .setLngLat(e.lngLat)
