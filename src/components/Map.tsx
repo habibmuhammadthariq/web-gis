@@ -41,11 +41,32 @@ const Map = () => {
         },
         layers: [
           {
-            id: 'osm-tiles',
+            id: 'osm-tiles-layer',
             type: 'raster',
             source: 'openstreetmap',
             minzoom: 0,
             maxzoom: 18
+          },
+          {
+            id: 'water-layer',
+            type: 'fill',
+            source: 'osm-tiles',
+            'source-layer': 'water',
+            paint: {
+              'fill-color': '#0f5e9c',
+              'fill-opacity': 0.7,
+            }
+          },
+          {
+            id: 'aeroway-layer',
+            type: 'line',
+            source: 'osm-tiles',
+            'source-layer': 'aeroway',
+            paint: {
+              'line-color': '#010203',
+              'line-opacity': 0.6,
+              "line-width": 3
+            }
           }
         ]
       },
