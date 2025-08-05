@@ -1,9 +1,7 @@
 import dynamic from "next/dynamic";
 import Head from "next/head";
 
-// import MapView from "@/components/MapView";
-
-const MapView = dynamic(() => import("../components/MapView"), { ssr: false });
+const Map = dynamic(() => import("../components/Map"), { ssr: false });
 
 export default function Home() {
   return (
@@ -12,7 +10,7 @@ export default function Home() {
         <title>Leaflet with Next.js</title>
       </Head>
       <main>
-        <MapView />
+        <Map />
       </main>
     </>
   )

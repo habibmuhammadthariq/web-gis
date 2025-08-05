@@ -4,6 +4,7 @@ import 'leaflet/dist/leaflet.css';
 import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css';
 import "cesium/Build/Cesium/Widgets/CesiumWidget/CesiumWidget.css"
 import "cesium/Build/Cesium/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector.css"
+import 'maplibre-gl/dist/maplibre-gl.css';
 
 export default function App({ Component, pageProps }: AppProps) {
   return <Component {...pageProps} />;

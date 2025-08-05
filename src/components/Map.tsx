@@ -1,0 +1,154 @@
+'use client'
+
+import React, { useEffect, useRef, useState } from "react";
+import maplibregl from "maplibre-gl";
+
+const Map = () => {
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<maplibregl.Map | null>(null);
+  const [mode, setMode] = useState<'2d' | '3d'>('2d');
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedMode = event.target.value as '2d' | '3d';
+    setMode(selectedMode);
+    
+    if (mapRef.current) {
+      mapRef.current.setLayoutProperty('buildings-3d', 'visibility', selectedMode === '3d' ? 'visible' : 'none');
+      mapRef.current.setLayoutProperty('buildings-2d', 'visibility', selectedMode === '2d' ? 'visible' : 'none');
+    }
+  }
+
+  useEffect(() => {
+    if (!mapContainerRef.current) return;
+
+    mapRef.current = new maplibregl.Map({
+      container: mapContainerRef.current,
+      style: {
+        version: 8,
+        sources: {
+          'openstreetmap': {
+            type: 'raster',
+            tiles: [
+              "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+            ],
+            tileSize: 256,
+            attribution: '© OpenStreetMap contributors',
+          },
+          "osm-tiles": {
+            type: "vector",
+            url: "https://api.maptiler.com/tiles/v3/tiles.json?key=" + process.env.NEXT_PUBLIC_MAPTILER_KEY,
+          }
+        },
+        layers: [
+          {
+            id: 'osm-tiles',
+            type: 'raster',
+            source: 'openstreetmap',
+            minzoom: 0,
+            maxzoom: 19
+          }
+        ]
+      },
+      center: [106.816666, -6.2], // Jakarta coordinates
+      zoom: 10
+    });
+
+    mapRef.current.on('load', () => {
+      // Building Footprints (2D)
+      mapRef.current?.addLayer({
+        id: 'buildings-2d',
+        type: 'fill',
+        source: 'osm-tiles',
+        'source-layer': 'building',
+        paint: {
+          'fill-color': [
+            'step',
+            ['coalesce', ['get', 'render_height'], 0],
+            '#f8d5cc', // Default color for buildings without height
+            5, '#f8d5cc', //"#0000ff",  // >=5 and <10: blue
+            10, "#00ff00", // >=10 and <20: green
+            20, "#ffff00", // >=20 and <50: yellow
+            50, "#800080"  // >=50: purple
+          ],
+        }
+      });  
+
+      // Building Footprints (3D)
+      mapRef.current?.addLayer({
+        id: 'buildings-3d',
+        type: 'fill-extrusion',
+        source: 'osm-tiles',
+        'source-layer': 'building',
+        paint: {
+          'fill-extrusion-color': [
+            'step',
+            ['coalesce', ['get', 'render_height'], 0],
+            '#f8d5cc', // Default color for buildings without height
+            5, '#f8d5cc', //"#0000ff",  // >=5 and <10: blue
+            10, "#00ff00", // >=10 and <20: green
+            20, "#ffff00", // >=20 and <50: yellow
+            50, "#800080"  // >=50: purple
+          ],
+          'fill-extrusion-height': ['coalesce', ['get', 'render_height'], 10],
+          'fill-extrusion-base': ['coalesce', ['get', 'render_min_height'], 0],
+          'fill-extrusion-opacity': 0.6
+        }
+      });
+
+      mapRef.current?.setLayoutProperty('buildings-3d', 'visibility', 'none');
+
+    });
+
+    return () => {
+      mapRef.current?.remove();
+    };
+  }, []);
+
+  return (
+    <div
+      ref={mapContainerRef}
+      style={{ height: "100vh", width: "100%" }}
+    >
+      <div style={{
+        position: 'absolute',
+        top: '10px',
+        right: '50px',
+        background: '#fff',
+        padding: '8px',
+        borderRadius: '6px',
+        fontFamily: 'system-ui',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+        zIndex: 2
+      }}>
+        <label>
+          <input 
+            type="radio" 
+            name="mode" 
+            value="2d" 
+            checked={mode === '2d'}
+            onChange={handleChange}
+            style={{
+              verticalAlign: 'middle',
+              position: 'relative',
+            }} />
+          &nbsp; 2D
+        </label>
+        <label style={{ marginLeft: '8px' }}>
+          <input 
+            type="radio"
+            name="mode"
+            value="3d"
+            checked={mode === '3d'}
+            onChange={handleChange} 
+            style={{
+              verticalAlign: 'middle',
+              position: 'relative',
+            }}/>
+          &nbsp; 3D
+        </label>
+      </div>
+    </div>
+  )
+}
+
+export default Map;
