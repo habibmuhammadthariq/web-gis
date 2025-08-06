@@ -1,10 +1,19 @@
-// import dynamic from "next/dynamic";
+import dynamic from "next/dynamic";
+import Head from "next/head";
 
-// const VectorTileMap = dynamic(() => import("@/components/VectorTiles"), {
-//   ssr: false
-// });
+const Map = dynamic(() => import("../components/MapJakarta"), {
+  ssr: false
+});
 
 export default function VectorTilePage() {
-  // return <VectorTileMap />;
-  return <> <div>hello world</div> </>
+  return (
+    <>
+      <Head>
+        <title>Jakarta</title>
+      </Head>
+      <main>
+        <Map />
+      </main>
+    </>
+  );
 } 

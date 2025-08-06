@@ -63,7 +63,8 @@ const Map = () => {
             paint: {
               'line-color': '#f44336',
               "line-width": 1
-            }
+            },
+            maxzoom: 18
           }
         ]
       },
