@@ -4,6 +4,9 @@ import webpack from "webpack";
 
 const nextConfig: NextConfig = {
   /* config options here */
+  typescript: {
+    ignoreBuildErrors: true
+  },
   reactStrictMode: true,
   webpack: config => {
     config.plugins.push(

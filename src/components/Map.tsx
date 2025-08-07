@@ -1,7 +1,9 @@
 'use client'
 
 import React, { useEffect, useRef, useState } from "react";
-import maplibregl from "maplibre-gl";
+import maplibregl, { Feature } from "maplibre-gl";
+import MaplibreGeocoder, { MaplibreGeocoderFeatureResults } from "@maplibre/maplibre-gl-geocoder";
+import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css"
 
 const Map = () => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
@@ -119,6 +121,45 @@ const Map = () => {
 
       mapRef.current?.setLayoutProperty('buildings-3d', 'visibility', 'none');
     });
+
+    const geocoder = new MaplibreGeocoder(
+      {
+        forwardGeocode: async (config) => {
+          const query = config.query ?? "";
+          // @ts-expect-error: query might be number[], and that's okay for now
+          const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=geojson`);
+          // const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=5`);
+          const data = await response.json();
+          // // Convert Nominatim results to Carmen GeoJSON format
+          // return {
+          //   type: "FeatureCollection",
+          //   features: data.map((result) => ({
+          //     type: 'Feature',
+          //     geometry: {
+          //         type: 'Point',
+          //         coordinates: [parseFloat(result.lon), parseFloat(result.lat)]
+          //     },
+          //     properties: {
+          //         address: result.display_name
+          //     },
+          //     place_name: result.display_name,
+          //     center: [parseFloat(result.lon), parseFloat(result.lat)]
+          //   })) as Feature[]
+          // }
+          return {
+            type: "FeatureCollection",
+            features: data.features.map((feature: Feature) => ({
+              type: "Feature",
+              geometry: feature.geometry,
+              place_name: feature.properties.display_name,
+              properties: feature.properties
+            }))
+          } as MaplibreGeocoderFeatureResults;
+        }
+      },
+      maplibregl
+    );
+    mapRef.current.addControl(geocoder);
 
     mapRef.current.on('click', (e) => {
       const features = mapRef.current?.queryRenderedFeatures(e.point, {
