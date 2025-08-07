@@ -253,8 +253,8 @@ const Map = () => {
     >
       <div style={{
         position: 'absolute',
-        top: '10px',
-        right: '280px',
+        top: '70px',
+        right: '10px',
         background: '#fff',
         padding: '8px',
         borderRadius: '6px',
