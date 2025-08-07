@@ -185,7 +185,6 @@ const Map = () => {
       if (!response.ok) { throw new Error(`Failed to fetch location info`); }
 
       const properties = await response.json();
-      console.log(properties)
 
       const village = properties.address.village || properties.address.suburb || ''
       const subdistrict = properties.address.city_district || properties.address.subdistrict || properties.address.municipality || ''
