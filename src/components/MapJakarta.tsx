@@ -82,46 +82,8 @@ const Map = () => {
     <div
       ref={mapContainerRef}
       style={{ height: "100vh", width: "100%" }}
-    >
-      <div style={{
-        position: 'absolute',
-        top: '10px',
-        right: '50px',
-        background: '#fff',
-        padding: '8px',
-        borderRadius: '6px',
-        fontFamily: 'system-ui',
-        boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-        zIndex: 2
-      }}>
-        <label>
-          <input 
-            type="radio" 
-            name="mode" 
-            value="2d" 
-            checked={mode === '2d'}
-            onChange={handleChange}
-            style={{
-              verticalAlign: 'middle',
-              position: 'relative',
-            }} />
-          &nbsp; 2D
-        </label>
-        <label style={{ marginLeft: '8px' }}>
-          <input 
-            type="radio"
-            name="mode"
-            value="3d"
-            checked={mode === '3d'}
-            onChange={handleChange} 
-            style={{
-              verticalAlign: 'middle',
-              position: 'relative',
-            }}/>
-          &nbsp; 3D
-        </label>
-      </div>
-    </div>
+    />
+      
   )
 }
 

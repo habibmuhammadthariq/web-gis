@@ -161,21 +161,40 @@ const Map = () => {
     );
     mapRef.current.addControl(geocoder);
 
-    mapRef.current.on('click', (e) => {
+    mapRef.current.on('click', async (e) => {
       const features = mapRef.current?.queryRenderedFeatures(e.point, {
         layers: ['buildings-2d', 'buildings-3d']
       });
       if (!features?.length) return;
 
-      const feature = features[0];
-      const props = feature.properties;
       const { lng, lat } = e.lngLat;
 
-      let html = "<strong>Building feature properties:</strong><br/><ul>";
-      for (const k in props) {
-        html += `<li><code>${k}</code>: ${props[k]}</li>`;
-      }
-      html += "</ul>";
+      // location detail
+      const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`;
+      const response = await fetch(url, {
+        headers: {
+          'User-Agent': 'WebGis/1.0 (thariqhabibmuhammad@gmail.com)'
+        }
+      });
+      if (!response.ok) { throw new Error(`Failed to fetch location info`); }
+
+      const properties = await response.json();
+
+      const village = properties.address.village || properties.address.suburb || ''
+      const subdistrict = properties.address.city_district || properties.address.subdistrict || properties.address.municipality || ''
+      const city = properties.address.city || properties.address.town || properties.address.county || ''
+      const province = properties.address.state || ''
+      let html = `
+          <strong>Detail Bangunan</strong>
+          <ul>
+            ${properties.address.road ? `<li><strong>Jalan:</strong> ${properties.address.road}</li>` : ''}
+            ${village ? `<li><strong>Desa:</strong> ${village}</li>` : ''}
+            ${subdistrict ? `<li><strong>Kecamatan:</strong> ${subdistrict}</li>` : ''}
+            ${city ? `<li><strong>Kabupaten/Kota:</strong> ${city}</li>` : ''}
+            ${province ? `<li><strong>Provinsi:</strong> ${province}</li>` : ''}
+            <li><strong>Negara:</strong> ${properties.address.country}</li>  
+          </ul>
+        `
       
       // Street View deep link (Google Maps)
       const streetViewUrl = `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lng}&heading=0&pitch=0&fov=90`;
@@ -235,7 +254,7 @@ const Map = () => {
       <div style={{
         position: 'absolute',
         top: '10px',
-        right: '50px',
+        right: '280px',
         background: '#fff',
         padding: '8px',
         borderRadius: '6px',
