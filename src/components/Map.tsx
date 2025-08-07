@@ -8,7 +8,7 @@ import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css"
 const Map = () => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
-  const [mode, setMode] = useState<'2d' | '3d'>('2d');
+  const [mode, setMode] = useState<'2d' | '3d'>('3d');
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedMode = event.target.value as '2d' | '3d';
@@ -46,8 +46,6 @@ const Map = () => {
             id: 'osm-tiles-layer',
             type: 'raster',
             source: 'openstreetmap',
-            minzoom: 0,
-            maxzoom: 18
           },
           {
             id: 'water-layer',
@@ -72,9 +70,12 @@ const Map = () => {
           }
         ]
       },
-      center: [106.816666, -6.2], // Jakarta coordinates
-      zoom: 10,
-      maxZoom: 18
+      // center: [106.816666, -6.2], // Jakarta coordinates
+      center: [101.02941029389802, 1.6424889026350797], // home
+      pitch: 60,
+      bearing: 90,
+      zoom: 18,
+      maxZoom: 19
     });
 
     mapRef.current.on('load', () => {
@@ -119,7 +120,7 @@ const Map = () => {
         }
       });
 
-      mapRef.current?.setLayoutProperty('buildings-3d', 'visibility', 'none');
+      mapRef.current?.setLayoutProperty('buildings-2d', 'visibility', 'none');
     });
 
     const geocoder = new MaplibreGeocoder(
@@ -273,7 +274,7 @@ const Map = () => {
               verticalAlign: 'middle',
               position: 'relative',
             }} />
-          &nbsp; 2D
+          &nbsp;2D
         </label>
         <label style={{ marginLeft: '8px' }}>
           <input 
@@ -286,7 +287,7 @@ const Map = () => {
               verticalAlign: 'middle',
               position: 'relative',
             }}/>
-          &nbsp; 3D
+          &nbsp;3D
         </label>
       </div>
     </div>
