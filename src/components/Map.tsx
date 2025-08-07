@@ -162,6 +162,11 @@ const Map = () => {
     );
     mapRef.current.addControl(geocoder);
 
+    // Add marker at home coordinates
+    new maplibregl.Marker()
+      .setLngLat([101.02957824557848, 1.6424497200550974]) // home coordinates
+      .addTo(mapRef.current!);
+
     mapRef.current.on('click', async (e) => {
       const features = mapRef.current?.queryRenderedFeatures(e.point, {
         layers: ['buildings-2d', 'buildings-3d']
@@ -180,6 +185,7 @@ const Map = () => {
       if (!response.ok) { throw new Error(`Failed to fetch location info`); }
 
       const properties = await response.json();
+      console.log(properties)
 
       const village = properties.address.village || properties.address.suburb || ''
       const subdistrict = properties.address.city_district || properties.address.subdistrict || properties.address.municipality || ''
