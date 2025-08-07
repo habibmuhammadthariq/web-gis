@@ -183,13 +183,13 @@ const Map = () => {
 
       const village = properties.address.village || properties.address.suburb || ''
       const subdistrict = properties.address.city_district || properties.address.subdistrict || properties.address.municipality || ''
-      const city = properties.address.city || properties.address.town || properties.address.county || ''
+      const city = properties.address.city || properties.address.county || ''; // || properties.address.town (sometimes it is a subdistrict and not kota/kabupaten )
       const province = properties.address.state || ''
       let html = `
           <strong>Detail Bangunan</strong>
           <ul>
             ${properties.address.road ? `<li><strong>Jalan:</strong> ${properties.address.road}</li>` : ''}
-            ${village ? `<li><strong>Desa:</strong> ${village}</li>` : ''}
+            ${village ? `<li><strong>Kelurahan/Desa:</strong> ${village}</li>` : ''}
             ${subdistrict ? `<li><strong>Kecamatan:</strong> ${subdistrict}</li>` : ''}
             ${city ? `<li><strong>Kabupaten/Kota:</strong> ${city}</li>` : ''}
             ${province ? `<li><strong>Provinsi:</strong> ${province}</li>` : ''}
@@ -198,7 +198,7 @@ const Map = () => {
         `
       
       // Street View deep link (Google Maps)
-      const streetViewUrl = `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lng}&heading=0&pitch=0&fov=90`;
+      const streetViewUrl = `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lng}&heading=90&pitch=0&fov=90`;
       // Append button row
       html += `
         <div style="margin-top:8px;">
