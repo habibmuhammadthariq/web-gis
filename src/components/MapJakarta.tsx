@@ -1,22 +1,11 @@
 'use client'
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import maplibregl from "maplibre-gl";
 
 const Map = () => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
-  const [mode, setMode] = useState<'2d' | '3d'>('2d');
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedMode = event.target.value as '2d' | '3d';
-    setMode(selectedMode);
-    
-    if (mapRef.current) {
-      mapRef.current.setLayoutProperty('buildings-3d', 'visibility', selectedMode === '3d' ? 'visible' : 'none');
-      mapRef.current.setLayoutProperty('buildings-2d', 'visibility', selectedMode === '2d' ? 'visible' : 'none');
-    }
-  }
 
   useEffect(() => {
     if (!mapContainerRef.current) return;
